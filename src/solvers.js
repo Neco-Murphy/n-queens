@@ -63,18 +63,20 @@ window.countNRooksSolutions = function(n) {
       permutate(antibase);
     }
 
-    if(n===4){
-      // for(var i = 0, i)
-      // var newbase = base.shift();
-      // var newantibase = newbase.reverse();
-      // permutate(newbase);
-      // permutate(newantibase);
+    if(n===4 || n ===5 || n===6 ){
+      var board = new Board({n:n});
+      console.log(board);
+      solution = [];
 
       var recurse = function(roundsToGo, playedSoFar){
-
+        console.log(playedSoFar)
         //base case
         if(roundsToGo === 0){
-          if(!Board.hasAnyColConflicts.call(playedSoFar)){//dont know how to call function
+          for(var i =0; i < n; i++){
+            board.attributes[i] = playedSoFar[i];
+            console.log(board.attributes[i], 'changed');
+          }
+          if(!board.hasAnyRooksConflicts()){//dont know how to call function
             solution.push(playedSoFar);
           }
           return;
@@ -83,7 +85,7 @@ window.countNRooksSolutions = function(n) {
         //recursive case
         for(var i = 0; i < n; i++){
           var currentPlay = base[i];
-          recurse(roundsToGo -1, playedSoFar.concat(currentPlay));
+          recurse(roundsToGo -1, playedSoFar.concat([currentPlay]));
         }
       }
       recurse(n,[]);

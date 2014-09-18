@@ -14,7 +14,23 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = [];
+  //+1 to where we want it to
+  //0 if total = 1 already
+
+  for(var i = 0; i < n; i++){
+    var row = [];
+    for(var j = 0; j<n; j++){
+      if(i === j){
+        row.push(1);
+      }else{
+        row.push(0);
+      }
+    }
+    solution.push(row);
+  }
+  return solution;
+  //fixme
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -24,7 +40,55 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+
+  var base = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]]
+  var antibase = base.reverse();
+  var solution = [base, antibase];
+  var solutionCount;
+
+  if(n===1 || n===2){
+    return solutionCount=n;
+  }else{
+  var permutate = function(arr){
+      for(var i = 0; i<n-1; i++){
+        var first = arr.shift();
+        var res =arr.push(first);
+        solution.push(res);
+      }
+      return solution;
+    }
+  }
+    if(n===3){
+      permutate(base);
+      permutate(antibase);
+    }
+
+    if(n===4){
+      // for(var i = 0, i)
+      // var newbase = base.shift();
+      // var newantibase = newbase.reverse();
+      // permutate(newbase);
+      // permutate(newantibase);
+
+      var recurse = function(roundsToGo, playedSoFar){
+
+        //base case
+        if(roundsToGo === 0){
+          if(!Board.hasAnyColConflicts.call(playedSoFar)){//dont know how to call function
+            solution.push(playedSoFar);
+          }
+          return;
+        }
+
+        //recursive case
+        for(var i = 0; i < n; i++){
+          var currentPlay = base[i];
+          recurse(roundsToGo -1, playedSoFar.concat(currentPlay));
+        }
+      }
+      recurse(n,[]);
+    }
+    solutionCount = solution.length;
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;

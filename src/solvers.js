@@ -41,7 +41,11 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
 
-  var base = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]]
+  var baseArray = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]] => [0,1,2]
+  var base=[];
+  for(var i = 0; i < n; i++){
+    base.push(i);
+  }
   var antibase = base.reverse();
   var solution = [base, antibase];
   var solutionCount;
@@ -58,12 +62,12 @@ window.countNRooksSolutions = function(n) {
       return solution;
     }
   }
-    if(n===3){
-      permutate(base);
-      permutate(antibase);
-    }
+    // if(n===3){
+    //   permutate(base);
+    //   permutate(antibase);
+    // }
 
-    if(n===4 || n ===5 || n===6 ){
+    if(n===3 || n===4 || n ===5 || n===6){
       var board = new Board({n:n});
       console.log(board);
       solution = [];
@@ -73,8 +77,7 @@ window.countNRooksSolutions = function(n) {
         //base case
         if(roundsToGo === 0){
           for(var i =0; i < n; i++){
-            board.attributes[i] = playedSoFar[i];
-            console.log(board.attributes[i], 'changed');
+            board.attributes[i] = baseArray[playedSoFar[i]];
           }
           if(!board.hasAnyRooksConflicts()){//dont know how to call function
             solution.push(playedSoFar);
@@ -85,7 +88,11 @@ window.countNRooksSolutions = function(n) {
         //recursive case
         for(var i = 0; i < n; i++){
           var currentPlay = base[i];
-          recurse(roundsToGo -1, playedSoFar.concat([currentPlay]));
+          var temp = playedSoFar.concat(currentPlay);
+          if(temp.length >= 2 && temp[temp.length-2] === temp[temp.length-1]){
+          }else{
+            recurse(roundsToGo -1, temp);
+          }
         }
       }
       recurse(n,[]);

@@ -148,10 +148,10 @@
       var row = 0;
 
       for(var i = n; i < board.length; i++){
-        if(i >= 0){
+        if(i >= 0 && row < board.length){
         dia.push(board[row][i]);
-        row++;
         }
+        row++;
       }
       var total = dia.reduce(function(a,b){
         return a + b;
@@ -164,9 +164,9 @@
     hasAnyMajorDiagonalConflicts: function() {
       var conflict = false;
       var board = this.rows();
-      var len = board.length
+      var len = board.length;
 
-      for(var i = -len + 1; i <len; i++){
+      for(var i = 1-len; i <len; i++){
         if(this.hasMajorDiagonalConflictAt(i)){
           conflict = true;
           return conflict;

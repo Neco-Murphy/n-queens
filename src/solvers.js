@@ -30,7 +30,7 @@ window.findNRooksSolution = function(n) {
     solution.push(row);
   }
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
@@ -44,8 +44,8 @@ window.countNRooksSolutions = function(n) {
   for(var i = 0; i < n; i++){
     base.push(i);
   }
-  var solution = [];
-  var solutionCount;
+
+  var solutionCount = 0;
 
   if(n===1 || n===2){
     return solutionCount=n;
@@ -59,7 +59,7 @@ window.countNRooksSolutions = function(n) {
         board.attributes[i] = baseArray[playedSoFar[i]];
       }
       if(!board.hasAnyRooksConflicts()){//dont know how to call function
-        solution.push(playedSoFar);
+        solutionCount++;
       }
       return;
     }
@@ -68,23 +68,21 @@ window.countNRooksSolutions = function(n) {
     for(var i = 0; i < n; i++){
       var currentPlay = base[i];
       var temp = playedSoFar.concat(currentPlay);
-      if(temp.length >= 2 && temp[temp.length-2] === temp[temp.length-1]){
-      } else if(temp.length >= 3 && temp[temp.length-3] === temp[temp.length-1]){
-      }else if(temp.length >= 4 && temp[temp.length-4] === temp[temp.length-1]){
-      }else if(temp.length >= 5 && temp[temp.length-5] === temp[temp.length-1]){
-      }else if(temp.length >= 6 && temp[temp.length-6] === temp[temp.length-1]){
-      }else if(temp.length >= 7 && temp[temp.length-7] === temp[temp.length-1]){
-      }else if(temp.length >= 8 && temp[temp.length-8] === temp[temp.length-1]){
-      }else{
+      var res = false;
+      for(var j = 0; j < temp.length-1; j++){
+        if(temp[temp.length-1] === temp[j]){
+          res = true;
+        }
+      }
+      if(!res){
         recurse(roundsToGo -1, temp);
       }
     }
   }
   recurse(n,[]);
 
-  solutionCount = solution.length;
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
 
@@ -92,8 +90,51 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
+  // var baseArray = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]] => [0,1,2]
+  // var base=[];
+  // for(var i = 0; i < n; i++){
+  //   base.push(i);
+  // }
+  // var solution = [];
 
-    var baseArray = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]] => [0,1,2]
+  // var board = new Board({n:n});
+
+  // var recurse = function(roundsToGo, playedSoFar){
+  //   //base case
+  //   if(roundsToGo === 0){
+  //     for(var i =0; i < n; i++){
+  //       board.attributes[i] = baseArray[playedSoFar[i]];
+  //     }
+  //     if(!board.hasAnyQueensConflicts()){//dont know how to call function
+  //       solution.push(playedSoFar);
+  //       return;
+  //     }
+  //     return;
+  //   }
+  //   //recursive case
+  //   for(var i = 0; i < n; i++){
+  //     var currentPlay = base[i];
+  //     var temp = playedSoFar.concat(currentPlay);
+  //     if(temp.length >= 2 && temp[temp.length-2] === temp[temp.length-1]){
+  //     } else if(temp.length >= 3 && temp[temp.length-3] === temp[temp.length-1]){
+  //     }else if(temp.length >= 4 && temp[temp.length-4] === temp[temp.length-1]){
+  //     }else if(temp.length >= 5 && temp[temp.length-5] === temp[temp.length-1]){
+  //     }else if(temp.length >= 6 && temp[temp.length-6] === temp[temp.length-1]){
+  //     }else if(temp.length >= 7 && temp[temp.length-7] === temp[temp.length-1]){
+  //     }else if(temp.length >= 8 && temp[temp.length-8] === temp[temp.length-1]){
+  //     }else{
+  //       recurse(roundsToGo -1, temp);
+  //     }
+  //   }
+  // }
+  // if(n === 1){
+  //   return solution = [[1]];
+  // }else if(n < 4) {
+  //   return solution = [];
+  // }else{
+  //   recurse(n,[]);
+  // }
+  var baseArray = this.findNRooksSolution(n)// give an array [[1,0,0],[0,1,0],[0,0,1]] => [0,1,2]
   var base=[];
   for(var i = 0; i < n; i++){
     base.push(i);
@@ -110,11 +151,10 @@ window.findNQueensSolution = function(n) {
         board.attributes[i] = baseArray[playedSoFar[i]];
       }
       if(!board.hasAnyQueensConflicts()){//dont know how to call function
-        solution.push(playedSoFar);
-        return;
+        solution.push(board.rows());
       }
-      return;
     }
+
     //recursive case
     for(var i = 0; i < n; i++){
       var currentPlay = base[i];
@@ -131,15 +171,20 @@ window.findNQueensSolution = function(n) {
       }
     }
   }
+
+
   if(n === 1){
-    return [1];
+    return solution = [[1]];
   }else if(n < 4) {
-    return undefined;
+    console.log(n, "n")
+    return solution = [[0,0],[0,0]];
   }else{
     recurse(n,[]);
   }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+
+
   return solution[0];
 };
 
@@ -191,9 +236,8 @@ window.countNQueensSolutions = function(n) {
     }
   }
   recurse(n,[]);
-  console.log(solution);
   solutionCount = solution.length;
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
